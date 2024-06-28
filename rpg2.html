@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPG em Javascript</title>
+  <style>
+    *, html, body{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("media/img/back1.jpeg");
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed; /* A imagem de fundo permanece fixa enquanto o conteúdo rola */
+
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 700px;
+      background-color: #222d;
+      padding: 20px;
+      margin: auto 1%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 90px;
+      margin: 20px 0px 0px 0px;
+    }
+    .form-section-attrib {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .form-section label, .form-section select, .form-section input[type="number"], .form-section input[type="text"], .form-section button {
+      margin-bottom: 10px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .attributes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0px;
+    }
+
+    .attribute {
+      width: 90px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0px;
+      border: 1px solid #1fab30aa;
+      border-radius: 20px;
+    }
+
+    .stats {
+      flex: 1;
+      text-align: center;
+    }
+
+    .bar {
+      height: 20px;
+      border-radius: 10px;
+
+      margin-top: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .barxp {
+      background-color: #26a69a;
+    }
+    .barhp {
+      background-color: #ff4c4c;
+    }
+    .bar .progress {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: width 0.3s;
+    }
+
+    .hp .progress {
+      background-color:#4caf50;
+    }
+
+    .xp .progress {
+      background-color:#ffa726;
+    }
+    
+
+    .bar .text {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: 20px;
+      color: #fff;
+      text-shadow: 2px 2px 4px #000000;
+      
+    }
+
+    .gold {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 18px;
+    }
+
+    .gold span {
+      color: #ffd700;
+    }
+
+    .log-container {
+      margin-top: 20px;
+    }
+
+    .log-container h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .encounter-log {
+  background-color: #444;
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 120px; /* Altura máxima da caixa de log */
+  overflow-y: auto; /* Habilita a rolagem vertical */
+  display: flex;
+  flex-direction: column; /* Apenas display flex sem reversão da direção */
+}
+
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 10px;
+      margin: 0 5px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .actions button:hover {
+      background-color: #666;
+    }
+    #versao2 {
+        color: aqua;
+        text-decoration: none; /* Remover sublinhado padrão */
+    }
+
+    /* Estilos para links visitados */
+    #versao2:visited {
+        color: purple;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Avallon RPG</h1>
+    
+    <form id="characterForm">
+      <div class="form-section">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="race">Raça:</label>
+        <select id="race" name="race">
+          <option value="elfo">Elfo</option>
+          <option value="humano">Humano</option>
+        </select>
+        
+        <label for="class">Classe:</label>
+        <select id="class" name="class">
+          <option value="barbaro" title="For +1">Bárbaro</option>
+          <option value="bardo" title="Car +1">Bardo</option>
+          <option value="bruxo" title="Con +1">Bruxo</option>
+          <option value="clerigo" title="Int +1">Clérigo</option>
+          <option value="druida" title="Sab +1">Druida</option>
+          <option value="feiticeiro" title="Car +1">Feiticeiro</option>
+          <option value="guerreiro" title="For +1">Guerreiro</option>
+          <option value="ladino" title="Des +1">Ladino</option>
+          <option value="monge" title="Sab +1">Monge</option>
+          <option value="paladino" title="Con +1">Paladino</option>
+          <option value="patrulheiro" title="Des +1">Patrulheiro</option>
+          <option value="mago" title="Int +1">Mago</option>
+        </select>
+      </div>
+
+      <div class="form-section form-section-attrib attributes">
+        <div class="attribute">
+          <label for="strength" title="A Força proporciona Bloqueio de dano e Armadura">Força:</label>
+          <input type="number" id="strength" name="strength" min="1" max="20" readonly required title="A Força proporciona Bloqueio de dano e Armadura">
+        </div>
+        
+        <div class="attribute">
+          <label for="constitution" title="A Constituição é a base para o HP e regeneração passiva">Constituição:</label>
+          <input type="number" id="constitution" name="constitution" min="1" max="20" readonly required title="A Constituição é a base para o HP e regeneração passiva">
+        </div>
+        
+        <div class="attribute">
+          <label for="dexterity" title="A Destreza proporciona Esquiva, Furtividade, e Roubo">Destreza:</label>
+          <input type="number" id="dexterity" name="dexterity" min="1" max="20" readonly required title="A Destreza proporciona Esquiva, Furtividade, e Roubo">
+        </div>
+        
+        <div class="attribute">
+          <label for="intelligence" title="A Inteligência amplifica o XP, e fornece XP passivo">Inteligência:</label>
+          <input type="number" id="intelligence" name="intelligence" min="1" max="20" readonly required title="A Inteligência amplifica o XP, e fornece XP passivo">
+        </div>
+        
+        <div class="attribute">
+          <label for="wisdom" title="A Sabedoria acelera a regeneração de vida e amplica a cura da Poção">Sabedoria:</label>
+          <input type="number" id="wisdom" name="wisdom" min="1" max="20" readonly required title="A Sabedoria acelera a regeneração de vida e amplica a cura da Poção">
+        </div>
+        
+        <div class="attribute">
+          <label for="charisma" title="O Carisma diminui o custo da Poção e amplifica o drop de ouro">Carisma:</label>
+          <input type="number" id="charisma" name="charisma" min="1" max="20" readonly required title="O Carisma diminui o custo da Poção e amplifica o drop de ouro">
+        </div>
+      </div>
+    </form>
+
+    <div class="stats-container">
+      <div class="stats">
+        <h3>Level</h3>
+        <div id="levelText">1</div>
+      </div>
+      <div class="stats">
+        <h3>XP</h3>
+        <div class="bar xp barxp">
+          <div class="progress" id="xpBar" style="width: 0%;"></div>
+          <div class="text" id="xpText">0 / 100</div>
+        </div>
+      </div>
+      <div class="stats">
+        <h3>HP</h3>
+        <div class="bar hp barhp">
+          <div class="progress" id="hpBar" style="width: 100%;"></div>
+          <div class="text" id="hpText">100 / 100</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <h3>Ouro</h3>
+        <div class="gold" id="goldText"><span>0</span></div>
+      </div>
+    </div>
+    <div class="actions">
+        <button type="button" id="startButton" onclick="startOrRestartGame()">Começar Jogo</button>
+        <button type="button" onclick="farmMonsters()">Farmar</button>
+        <button type="button" onclick="usePotion()">Usar Poção (Custo: 70 Ouro)</button>
+      </div>
+    <div class="log-container">
+      <h3>Encontros</h3>
+      <div class="encounter-log" id="encounterLog"></div>
+    </div>
+
+    <div style="text-align: center; padding-top: 10px;"><a id="versao2" href="../rpg/rpg.html" target="_blank" color="aqua">The Legend of Avallon em breve</a></div>
+ <div>
+  <p>Proximas atualizações</p>
+  <hr>
+  <p>recalcular e equilibriar os atributos e seus ganhos em suas formulas
+    <br>
+    nivelamento de ganho de xp e gold por cada monstro
+    <br>
+    nivelamento dos monstros
+    <br>
+    imagem contendo rosto da raça escolhida
+    <br>
+    inserir genero alterando imagem da raça de acordo com o genero
+    <br>
+    bonificação de raça
+    <br>
+    adicionar alinhamento como tendencia ou carater e conceder efeito
+    <br>
+    adicionar origem do char incluindo a opção random dos antepassados e conceder efeito
+    <br>
+    adicionar visualizaçao dos dados rolados com circulos, onde os 3 maiores ficam verde e o menor fica vermelho
+    <br>
+    tela de encontros de monstros com imagem
+    <br>
+    barras de hp dos monstros 
+    <br>
+    batalhs por rounds calculados por força e hp dos monstros
+    <br>
+    dano controlados por atributo força da classe
+    <br>
+    velocidade de ataque controlada por destreza 
+    <br>
+    velocidade de ataque mostra a quantidade de ataques por segundo
+    <br>
+    inserir velocidade de ataque para monstros
+    <br>
+    adicionar efeitos de controle, veneno
+    <br>
+    adicionar mana
+    <br>
+    adicionar magias
+    <br>
+    adicionar buffs
+    <br>
+    adicionar painel de itens
+    <br>
+    adicionar botao de comprar itens
+    <br>
+    adicionar botao de comprar buffs
+    <br>
+    adicionar taberna para contratar mercenários 
+    <br>
+    adicionar efeitos de quebra de armadura, critico, e penetração de armadura
+    <br>
+    conceder separação entre ataque fisico e magico defesa fisica e magica
+    <br>
+    balancear habilidades e tempo de recarga
+    <br>
+    adicionar interface espelhada entre monstros e heroi
+    <br>
+    adicionar interface 2d baseada em pontos, cada monstro sendo um ponto ao inves do botao farmar basta mover seu ponto e encostar no outro ponto.
+    <br>
+    criar visual grafico onde os montros são encontrados em área de "mato"
+    <br>
+    criar visual grafico onde o personagem tem sua visualização 2d de todas as posiçoes e animaçõ de movimento.
+    <br>
+    criar um botao de configuração do jogo
+    <br>
+    nãs configurações permetir que o jogador escolha entre controlar o personagem em rotas 2d ou com movimentos diagonais também.
+    <br>
+    nas configurações permitir controle de volume do jogo
+    <br>
+    nas configurações permitir a tradução do jogo para alguns idiomas
+    <br>
+    nas configurações permitir modelo de controle para touch
+    <br>
+    nas configuraçõe permitir modelo de controle fisico
+    <br>
+    adicionar atalhos para controles mas rápidos e exibir a posibilidade de edição nas configurações
+    <br>
+    consolidar controle completo com apenas uma entrada se necessário, teclado, mouse, touch e joystick
+    <br>
+    tutorial para conectar joystick ao jogo
+    <br>
+    adicionar pontos de teleporte de mapa para trocar de vila
+    <br>
+    adicionar pontos de teleporte para tabernas, hospitais, ferreiro, hotel e outros
+    <br>
+    adicionar boss por mapa, que impede o avanço do player
+    <br>
+    o jogo irá salvar seus atributos e gold em cada level em uma array.
+    <br>
+    caso a morte aconteça, respawn será ativido. portanto respawn será adicionado.
+    <br>
+    a punição pela morte será a perda de 1 level a cada 5 arredondado para baixo, buscar os atributos voltar para o level carregando da array as informações do level especifico, os leveis seguintes deverão ser apagados da array.
+    <br>
+    adicionar drop de itens e taxa de drop baseada em atributo
+    <br>
+    adicionar barra de stamina, fome, sono, sede.
+    <br>
+    adicionar talentos
+    <br>
+    controle com api do chatgpt de narração de historia
+  </p>
+ </div>
+  </div>
+
+  <audio id="levelUpSound">
+    <source src="media/audio/lvlup.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio HTML5.
+  </audio>
+  <audio id="potionSound">
+    <source src="media/audio/potion.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio HTML5.
+  </audio>
+  <audio id="deadSound">
+    <source src="media/audio/dead.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio HTML5.
+  </audio>
+<script>
+  // Variáveis do jogador
+  let player = {
+    name: '',
+    race: '',
+    class: '',
+    level: 1,
+    xp: 0,
+    maxHp: 0,
+    currentHp: 0,
+    strength: 0,
+    constitution: 0,
+    dexterity: 0,
+    intelligence: 0,
+    wisdom: 0,
+    charisma: 0,
+    gold: 0,
+    xpNeeded: 100,
+    monstersPerLevel: [],
+    potionCost: 70,
+    diceRolled: false
+  };
+
+  ////////nomes aleatorios caso o player não escolha um nome.
+  const nomesAleatorios = [
+'Frodo', 'Aragorn', 'Gandalf', 'Legolas', 'Gimli', 'Samwise Gamgi', 'Boromir', 'Merry', 'Pippin', 'Saruman', 'Sauron', 'Elrond', 'Galadriel', 'Bilbo Bolseiro', 'Thranduil', 'Gollum', 'Éomer', 'Éowyn', 'Faramir', 'Radagast', 'Athena', 'Icarus', 'Atlas', 'Afrodite', 'Natus Vincere', 'Morfeu', 'Arthur Pendragon', 'Uther', "D'Artagnan", 'Armstrong', 'Celina', 'Aya', 'Pandora', 'Isis', 'Argos', 'Luthien', 'Yavana', 'Elianor', 'Agatha', 'Mira', 'Noele', 'Kael'
+        
+];
+// Variável para controlar o estado do jogo
+let gameStarted = false;
+
+// Função para iniciar ou reiniciar o jogo
+function startOrRestartGame() {
+    if (gameStarted) {
+        // Reiniciar o jogo
+        startGame(); // Chama a função startGame para reiniciar os dados do jogo
+        // Altera o texto do botão para "Reiniciar Jogo"
+        document.getElementById('startButton').textContent = 'Reiniciar Jogo';
+    } else {
+        // Iniciar o jogo pela primeira vez
+        startGame(); // Chama a função startGame para iniciar o jogo
+        gameStarted = true; // Define que o jogo foi iniciado
+        // Altera o texto do botão para "Reiniciar Jogo"
+        document.getElementById('startButton').textContent = 'Reiniciar Jogo';
+    }
+}
+  ///função para iniciar o jogo
+  function startGame() {
+    const formData = new FormData(document.getElementById('characterForm'));
+    let nomeInput = formData.get('name').trim(); // Obter o nome do formulário e remover espaços em branco
+
+    // Verificar se o nome está vazio ou não preenchido
+    if (nomeInput === '') {
+        // Escolher um nome aleatório da lista
+        const nomeAleatorioIndex = Math.floor(Math.random() * nomesAleatorios.length);
+        player.name = nomesAleatorios[nomeAleatorioIndex];
+        nomeInput = player.name; // Atualiza nomeInput com o nome aleatório escolhido
+    } else {
+        player.name = nomeInput;
+    }
+
+    // Atualiza o valor do campo de texto no formulário com o nome escolhido
+    document.getElementById('name').value = nomeInput;
+
+    player.race = formData.get('race');
+    player.class = formData.get('class');
+    player.strength = getRandomAbilityScore();
+    player.constitution = getRandomAbilityScore();
+    player.dexterity = getRandomAbilityScore();
+    player.intelligence = getRandomAbilityScore();
+    player.wisdom = getRandomAbilityScore();
+    player.charisma = getRandomAbilityScore();
+    player.maxHp = getInitialMaxHp();
+    player.currentHp = player.maxHp;
+    player.gold = 0;
+    player.xp = 0;
+    player.level = 1;
+    player.xpNeeded = 100;
+    player.potionCost = calculatePotionCost(); // Calcula o custo da poção baseado na Carisma
+
+    logMessage(`Jogo iniciado! Boa sorte, ${player.name}!`);
+    logMessage('4 dados de 6 lados rolados por atributo');
+    logMessage('Soma dos 3 maiores dados efetuada');
+    updateAttributes();
+    updateGameInfo();
+    updatePotionButton(); // Atualiza o texto do botão de poção
+    
+    // Iniciar o temporizador para regenerar HP com base na sabedoria
+    startRegenerationTimer();
+
+      // Iniciar o temporizador para ganhar XP passivamente com base na inteligência
+      startXpGainTimer();
+  }
+
+///////////////////////////Constituição HP total, Hp por Level, Quantidade de regen de HP.
+
+  function getInitialMaxHp() {
+  // Calcular o HP baseado na Constituição
+  let baseHp = Math.floor((player.constitution - 10) / 2) + 80;
+
+  // Adicionar um valor aleatório entre 1 e 8
+  let randomBonus = Math.floor(Math.random() * 8) + 1;
+
+  // Retornar o HP inicial total
+  return baseHp + randomBonus;
+}
+
+///////////////////////////Carisma
+function calculatePotionCost() {
+    return Math.max(10, 70 - player.charisma); // Custo mínimo de 10
+}
+
+///////////////////////////Sabedoria tempo para regenerar.
+
+// Função para iniciar o temporizador de regeneração de HP
+function startRegenerationTimer() {
+    // Calcula o intervalo de regeneração baseado na sabedoria do jogador
+    const regenerationInterval = 200000 / player.wisdom; // Intervalo em milissegundos
+    setInterval(regenerateHPByWisdom, regenerationInterval);
+}
+
+// Função para regenerar HP com base na sabedoria
+function regenerateHPByWisdom() {
+    // Quantidade de HP regenerado é igual ao valor da constituição do jogador dividido por 3
+    const hpRegenerated = Math.ceil(player.constitution / 3);
+
+    // Verifica se o jogador está vivo e não alcançou o máximo de HP
+    if (player.currentHp > 0 && player.currentHp < player.maxHp) {
+        // Adiciona o HP regenerado, limitando ao máximo de HP
+        player.currentHp = Math.min(player.maxHp, player.currentHp + hpRegenerated);
+        updateGameInfo(); // Atualiza as informações do jogo após a regeneração
+    }
+}
+
+///////////////////////////Inteligencia passiva
+
+// Função para iniciar o temporizador de aumento de XP passivo com base na inteligência
+function startXpGainTimer() {
+    // Calcula o intervalo de aumento de XP passivo baseado na inteligência do jogador
+    const xpGainInterval = 50000 / player.intelligence; // Intervalo em milissegundos
+    setInterval(gainXpByIntelligence, xpGainInterval);
+}
+
+    // Função para aumentar XP passivamente com base na inteligência
+    function gainXpByIntelligence() {
+    // Calcula um valor aleatório de um dado de 6 faces
+    const xpDice = Math.ceil(Math.random() * 6);
+
+    // Calcula o XP ganho com base na inteligência ajustada
+    const xpGained = Math.ceil(player.intelligence + xpDice);
+
+    // Adiciona o XP ganho ao jogador
+    player.xp += xpGained;
+    if (player.xp >= player.xpNeeded) {
+            levelUp();
+        }
+    updateGameInfo(); // Atualiza as informações do jogo após o aumento de XP
+    
+}
+
+///////////////////////////Força, Bloqueio de dano em FarmMonters
+
+///////////////////////////Destreza Esquiva em FarmMonsters
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+//randomizar dados
+  function getRandomAbilityScore() {
+  let diceValues = [];
+  
+  // Simula o lançamento de 4 dados de 6 lados
+  for (let i = 0; i < 4; i++) {
+    diceValues.push(Math.floor(Math.random() * 6) + 1);
+  }
+  
+  // Ordena os valores do maior para o menor
+  diceValues.sort((a, b) => b - a);
+  
+  // Soma os três maiores valores
+  let sum = diceValues[0] + diceValues[1] + diceValues[2];
+  
+  return sum ;
+}
+
+//atributos atualizar com o dados
+function rollDice() {
+    if (!player.diceRolled) {
+        player.strength = rollAttribute();
+        player.constitution = rollAttribute();
+        player.dexterity = rollAttribute();
+        player.intelligence = rollAttribute();
+        player.wisdom = rollAttribute();
+        player.charisma = rollAttribute();
+
+        document.getElementById('strength').value = player.strength;
+        document.getElementById('constitution').value = player.constitution;
+        document.getElementById('dexterity').value = player.dexterity;
+        document.getElementById('intelligence').value = player.intelligence;
+        document.getElementById('wisdom').value = player.wisdom;
+        document.getElementById('charisma').value = player.charisma;
+
+        document.getElementById('strength').readOnly = true;
+        document.getElementById('constitution').readOnly = true;
+        document.getElementById('dexterity').readOnly = true;
+        document.getElementById('intelligence').readOnly = true;
+        document.getElementById('wisdom').readOnly = true;
+        document.getElementById('charisma').readOnly = true;
+
+        player.diceRolled = true;
+    } else {
+        alert('Você já rolou os dados uma vez.');
+    }
+}
+//rolar para atrubutos
+function rollAttribute() {
+    let diceValues = [];
+    for (let i = 0; i < 4; i++) {
+        diceValues.push(Math.floor(Math.random() * 6) + 1);
+    }
+    diceValues.sort((a, b) => b - a);
+    return diceValues[0] + diceValues[1] + diceValues[2];
+}
+
+
+
+  // Função para atualizar os atributos na tela
+  function updateAttributes() {
+    document.getElementById('strength').value = player.strength;
+    document.getElementById('constitution').value = player.constitution;
+    document.getElementById('dexterity').value = player.dexterity;
+    document.getElementById('intelligence').value = player.intelligence;
+    document.getElementById('wisdom').value = player.wisdom;
+    document.getElementById('charisma').value = player.charisma;
+  }
+  
+
+// Função para atualizar as informações do jogo na tela
+function updateGameInfo() {
+    document.getElementById('hpText').textContent = `${player.currentHp} / ${player.maxHp}`;
+    document.getElementById('hpBar').style.width = `${(player.currentHp / player.maxHp) * 100}%`;
+    document.getElementById('xpText').textContent = `${player.xp} / ${player.xpNeeded}`;
+    document.getElementById('xpBar').style.width = `${(player.xp / player.xpNeeded) * 100}%`;
+    document.getElementById('goldText').innerHTML = `<span>${player.gold}</span>`;
+    document.getElementById('levelText').textContent = `${player.level}`;
+}
+
+
+// Define os monstros disponíveis por nível
+player.monstersPerLevel = {
+    1: [{ name: 'Goblin', damage: 2 }, { name: 'Rato', damage: 1 }],
+    2: [{ name: 'Orc', damage: 4 }, { name: 'Lobo', damage: 3 }],
+    3: [{ name: 'Dragão Bebê', damage: 8 }, { name: 'Troll', damage: 6 }],
+    4: [{ name: 'Esqueleto', damage: 3 }, { name: 'Zumbi', damage: 5 }],
+    5: [{ name: 'Elemental de Fogo', damage: 10 }, { name: 'Bárbaro', damage: 7 }],
+    6: [{ name: 'Grifo', damage: 12 }, { name: 'Basilisco', damage: 9 }],
+    7: [{ name: 'Cerberus', damage: 15 }, { name: 'Hidra', damage: 11 }],
+    8: [{ name: 'Manticore', damage: 18 }, { name: 'Espectro', damage: 13 }],
+    9: [{ name: 'Dragão Adulto', damage: 20 }, { name: 'Lich', damage: 16 }],
+    10: [{ name: 'Kraken', damage: 25 }, { name: 'Behemoth', damage: 22 }]
+    // Adicione mais níveis e monstros conforme necessário
+};
+
+
+
+//encontros menssagem
+  function logMessage(message) {
+  const encounterLog = document.getElementById('encounterLog');
+  const p = document.createElement('p');
+  p.textContent = message;
+  encounterLog.appendChild(p);
+
+  // Rola o log para a parte inferior após adicionar a mensagem
+  encounterLog.scrollTop = encounterLog.scrollHeight;
+}
+
+
+function farmMonsters() {
+
+    // Verifica se o jogador já está morto
+    if (player.currentHp <= 0) {
+        logMessage(`${player.name} você morreu, Comece outro jogo.`);
+        return;
+    }
+    const currentLevel = player.level;
+    let availableMonsters = [];
+
+    // Reúne todos os monstros de níveis menores ou iguais ao nível atual do jogador
+    for (let level = 1; level <= currentLevel; level++) {
+        if (player.monstersPerLevel[level]) {
+            availableMonsters = availableMonsters.concat(player.monstersPerLevel[level]);
+        }
+    }
+
+    if (availableMonsters.length === 0) {
+        logMessage('Nenhum monstro disponível para este nível.');
+        return;
+    }
+
+    const randomMonsterIndex = Math.floor(Math.random() * availableMonsters.length);
+    const monster = availableMonsters[randomMonsterIndex];
+    const monstersDefeated = Math.floor(Math.random() * 3) + 1; // De 1 a 3 monstros
+    
+
+    const monsterDamage = monster.damage;
+    const randomMonsterDamage = Math.floor(Math.random() * monsterDamage) + 1; // Dano aleatório entre 1 e monsterDamage
+
+    // Calcula o ganho de ouro baseado no número de monstros e no dano do monstro
+    const baseGoldEarned = monstersDefeated * 5;
+    const randomGoldBonus = Math.floor(Math.random() * randomMonsterDamage) + 1; // Bônus de ouro aleatório entre 1 e randomMonsterDamage
+    const totalGoldEarned = baseGoldEarned + randomGoldBonus + player.charisma;
+
+    const monsterXp = monster.damage;
+    const xpEarned = monstersDefeated * 20 * monsterXp; // 20 XP por monstro derrotado
+
+    // Calcula a chance de esquiva baseada na destreza do jogador
+    const dodgeChance = player.dexterity;
+    const didDodge = Math.random() * 100 < dodgeChance;
+
+    // Calcula o dano base
+    let damageTaken = Math.floor((Math.random() * 4) + 1) * monsterDamage * monstersDefeated;
+
+    // Reduz o dano com base na força do jogador
+    const strengthReduction = Math.ceil(player.strength / 3);
+    damageTaken -= strengthReduction;
+
+    // Calcula o bloqueio de dano baseado na força do jogador e no nível
+    const armorReduction = Math.floor((player.strength / 100) * damageTaken);
+    damageTaken -= armorReduction;
+
+    // Certifica-se de que o dano nunca seja negativo
+    damageTaken = Math.max(damageTaken, 0);
+
+    // Aplica o dano no HP do jogador
+    player.currentHp -= damageTaken;
+
+    if (player.currentHp <= 0) {
+        player.currentHp = 0; // Certifica-se de que o HP não fique negativo
+        updateGameInfo(); // Atualiza as informações do jogo antes de exibir a mensagem
+        playDeadSound();
+        logMessage(`${player.name} recebeu ${damageTaken} de dano de ${monstersDefeated} ${monster.name}(s) e morreu!`);
+        // Aqui você pode adicionar lógica adicional, como reiniciar o jogo ou outra ação
+    } else {
+        // Adiciona um valor aleatório de um dado de 6 faces (d6) à inteligência do jogador
+        const intelligenceWithDice = player.intelligence + Math.floor(Math.random() * 6) + 1;
+        
+        // Calcular XP adicional baseado na inteligência ajustada
+        const xpBonus = Math.floor(xpEarned * (intelligenceWithDice / 40));
+        const totalXpEarned = xpEarned + xpBonus;
+
+        player.gold += totalGoldEarned;
+        if (didDodge) {
+            // Escolher aleatoriamente entre três mensagens
+            const messageType = Math.floor(Math.random() * 3) + 1;
+            if (messageType === 1) {
+                player.xp += totalXpEarned;
+                logMessage(`${player.name} esquivou do ataque de ${monstersDefeated} ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro.`);
+            } else if (messageType === 2) {
+                player.xp += totalXpEarned;
+                logMessage(`${player.name} atacou furtivamente ${monstersDefeated} ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro.`);
+            } else {
+                logMessage(`${player.name} roubou furtivamente ${totalGoldEarned} de ouro sem ser notado.`);
+            }
+        } else {
+            player.xp += totalXpEarned;
+            logMessage(`${player.name} derrotou ${monstersDefeated} ${monster.name}(s) e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro. Dano recebido: ${damageTaken}.`);
+        }
+    
+        if (player.xp >= player.xpNeeded) {
+            levelUp();
+        }
+        updateGameInfo();
+        playFarmSound();
+    }
+}
+
+
+//função usar potion
+function usePotion() {
+    // Verifica se o jogador está vivo antes de permitir usar a poção
+    if (player.currentHp <= 0) {
+        logMessage(`Comece o jogo!`);
+        return; // Sai da função sem fazer mais nada
+    }
+
+    const potionHealAmount = 20+player.wisdom; // Define a quantidade de HP que a poção irá curar
+
+    if (player.gold >= player.potionCost) {
+        // Verifica se o jogador tem ouro suficiente para comprar a poção
+        if (player.currentHp + potionHealAmount <= player.maxHp) {
+            // Se a cura da poção não exceder o máximo de HP, adiciona a quantidade de cura
+            player.currentHp += potionHealAmount;
+        } else {
+            // Se a cura da poção exceder o máximo de HP, apenas define para o máximo
+            player.currentHp = player.maxHp;
+        }
+
+        // Subtrai o custo da poção do ouro do jogador
+        player.gold -= player.potionCost;
+
+        // Atualiza as informações do jogo na tela
+        updateGameInfo();
+        playPotionSound();
+        // Exibe mensagem de log para o jogador
+        logMessage(`${player.name} usou uma poção de cura e restaurou ${potionHealAmount} HP.`);
+    } else {
+        // Se o jogador não tiver ouro suficiente, exibe mensagem de log informando
+        logMessage(`${player.name} não tem ouro suficiente para comprar uma poção de cura.`);
+    }
+}
+function updatePotionButton() {
+    document.querySelector('button[onclick="usePotion()"]').textContent = `Usar Poção (Custo: ${player.potionCost} ouro)`;
+}
+
+//função upar
+function levelUp() {
+    player.level++;
+    player.xp -= player.xpNeeded;
+    player.xpNeeded = Math.floor((player.xpNeeded + 82) * 1.35);
+    player.maxHp += Math.floor(((player.constitution - 10) / 2) + (Math.random() * 6) + 1);
+    player.currentHp = player.maxHp;
+
+// Aumenta os atributos com base na classe do jogador
+switch (player.class) {
+
+//Carisma  
+    case 'bardo':
+        player.charisma += 1; 
+        break;
+
+    case 'feiticeiro':
+        player.charisma += 1; 
+        break;
+
+//Destreza
+    case 'patrulheiro':
+        player.dexterity += 1; 
+        break;
+ 
+    case 'ladino':
+        player.dexterity += 1; 
+        break;
+
+//Inteligência
+
+    case 'mago':
+        player.intelligence += 1; 
+        break;
+
+    case 'clerigo':
+        player.intelligence += 1; 
+        break;
+
+//Sabedoria
+    case 'druida':
+        player.wisdom += 1; 
+        break;
+
+    case 'monge':
+        player.wisdom += 1; 
+        break;
+
+//Força
+    case 'guerreiro':
+        player.strength += 1;
+        break;
+
+    case 'barbaro':
+        player.strength += 1; 
+        break;
+
+//Constituição
+    case 'bruxo':
+        player.constitution += 1; 
+        break;
+
+    case 'paladino':
+        player.constitution += 1; 
+        break;
+
+    default:
+        console.error('Classe desconhecida:', player.class);
+}
+
+    // Aumenta os atributos com base no nível
+    let attributes = ['strength', 'constitution', 'dexterity', 'intelligence', 'wisdom', 'charisma'];
+    for (let i = 0; i < 4; i++) {
+    let randomAttribute = attributes[Math.floor(Math.random() * attributes.length)];
+    player[randomAttribute] += 1;
+}
+
+
+    // Recalcula o custo da poção
+    player.potionCost = calculatePotionCost();
+    updatePotionButton(); // Atualiza o texto do botão de poção
+
+    updateAttributes(); // Atualiza os campos do formulário com os novos valores de player
+
+    updateGameInfo();
+    playLevelUpSound();
+    logMessage(`${player.name} subiu para o nível ${player.level}.`);
+}
+
+
+  // Funções para reproduzir som
+  function playLevelUpSound() {
+    const levelUpSound = document.getElementById('levelUpSound');
+    levelUpSound.currentTime = 0;
+    levelUpSound.play();
+  }
+  function playPotionSound() {
+    const potionSound = document.getElementById('potionSound');
+    potionSound.currentTime = 0;
+    potionSound.play();
+  }
+  function playDeadSound() {
+    const deadSound = document.getElementById('deadSound');
+    deadSound.currentTime = 0;
+    deadSound.play();
+  }
+</script>
+
+</body>
+</html>
