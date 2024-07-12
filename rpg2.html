@@ -5,190 +5,306 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RPG em Javascript</title>
   <style>
-    *, html, body{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
+      *, html, body{
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      body {
       font-family: Arial, sans-serif;
       background-image: url("media/img/back1.jpeg");
-    background-size: cover;
-    background-position: center center;
-    background-attachment: fixed; /* A imagem de fundo permanece fixa enquanto o conteúdo rola */
-
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
       color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-    }
+  }
 
-    .container {
-      width: 700px;
-      background-color: #222d;
-      padding: 20px;
-      margin: auto 1%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-    }
+      .container {
+        width: 90%;
+        max-width: 600px;
+        background-color: #222d;
+        padding: 20px;
+        margin: auto 1%;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      }
 
-    h1 {
-      text-align: center;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 2px;
+      }
 
-    form {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
+      form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
 
-    .form-section {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      width: 90px;
-      margin: 20px 0px 0px 0px;
-    }
-    .form-section-attrib {
-      flex-direction: row;
-      justify-content: space-around;
-    }
+      .form-section {
+        flex: 1;
+    min-width: 150px;
+    margin: 10px 0;
+}
+      .form-section-attrib {
+        flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 
-    .form-section label, .form-section select, .form-section input[type="number"], .form-section input[type="text"], .form-section button {
-      margin-bottom: 10px;
-      font-size: 16px;
-      width: 100%;
-    }
+.form-section label,
+.form-section select,
+.form-section input[type="number"],
+.form-section input[type="text"],
+.form-section button {
+    margin-bottom: 10px;
+    font-size: 16px;
+    width: 100%;
+}
 
-    .attributes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0px;
-    }
+.attributes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
 
+.attribute {
+    width: calc(30%); /* Ajusta a largura dos atributos com um espaço de 10px entre eles */
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border: 1px solid #1fab30aa;
+    border-radius: 20px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+      .stats {
+        flex: 1;
+        text-align: center;
+      }
+
+      .bar {
+        height: 20px;
+        border-radius: 10px;
+        margin-top: 5px;
+        position: relative;
+        overflow: hidden;
+      }
+      .barxp {
+        background-color: #26a69a;
+      }
+      .barhp {
+        background-color: #ff4c4c;
+      }
+      .bar .progress {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: width 0.3s;
+      }
+
+      .hp .progress {
+        background-color:#4caf50;
+      }
+
+      .xp .progress {
+        background-color:#ffa726;
+      }
+      
+
+      .bar .text {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        line-height: 20px;
+        color: #fff;
+        text-shadow: 2px 2px 4px #000000;
+        white-space: nowrap; /* Impede a quebra de linha */
+    overflow: hidden; /* Garante que o texto não saia da barra */
+    text-overflow: ellipsis; /* Adiciona reticências se o texto for muito longo */
+ 
+      }
+
+      .gold {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 18px;
+      }
+
+      .gold span {
+        color: #ffd700;
+      }
+
+      .log-container {
+        margin-top: 20px;
+      }
+
+      .log-container h3 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .encounter-log {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 120px; /* Altura máxima da caixa de log */
+    overflow-y: auto; /* Habilita a rolagem vertical */
+    display: flex;
+    flex-direction: column; /* Apenas display flex sem reversão da direção */
+  }
+
+
+      .actions {
+        display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;;
+      }
+
+      .actions button {
+    flex: 1;
+    padding: 10px;
+    background-color: #444;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.actions button:hover {
+    background-color: #666;
+}
+
+#versao2 {
+    color: aqua;
+    text-decoration: none;
+}
+
+#versao2:visited {
+    color: green;
+}
+
+/* Media Queries para Responsividade */
+
+@media (max-width: 600px) {
+    .form-section{
+    
+        width: 100%; /* Faz com que os elementos ocupem toda a largura disponível */
+        min-width: auto; /* Remove a largura mínima */
+    }
     .attribute {
-      width: 90px;
-      display: flex;
-      flex-direction: column;
+      width:30%;
     }
 
     .stats-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0px;
-      border: 1px solid #1fab30aa;
-      border-radius: 20px;
+        flex-direction: column;
     }
 
     .stats {
-      flex: 1;
-      text-align: center;
+        margin-bottom: 10px;
     }
-
-    .bar {
-      height: 20px;
-      border-radius: 10px;
-
-      margin-top: 5px;
-      position: relative;
-      overflow: hidden;
-    }
-    .barxp {
-      background-color: #26a69a;
-    }
-    .barhp {
-      background-color: #ff4c4c;
-    }
-    .bar .progress {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transition: width 0.3s;
-    }
-
-    .hp .progress {
-      background-color:#4caf50;
-    }
-
-    .xp .progress {
-      background-color:#ffa726;
-    }
-    
-
-    .bar .text {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      line-height: 20px;
-      color: #fff;
-      text-shadow: 2px 2px 4px #000000;
-      
-    }
-
-    .gold {
-      text-align: center;
-      margin-top: 5px;
-      font-size: 18px;
-    }
-
-    .gold span {
-      color: #ffd700;
-    }
-
-    .log-container {
-      margin-top: 20px;
-    }
-
-    .log-container h3 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .encounter-log {
-  background-color: #444;
-  padding: 10px;
-  border-radius: 5px;
-  max-height: 120px; /* Altura máxima da caixa de log */
-  overflow-y: auto; /* Habilita a rolagem vertical */
-  display: flex;
-  flex-direction: column; /* Apenas display flex sem reversão da direção */
 }
 
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
 
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
+    .form-section,
+    .attribute {
+        font-size: 14px; /* Ajusta o tamanho da fonte para telas menores */
     }
 
     .actions button {
-      flex: 1;
-      padding: 10px;
-      margin: 0 5px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+@media(max-width:220px){
+  .attribute{
+    min-width: 30px;
+  }
+}
+
+.attribute label {
+    display: block;
+    font-size: 16px;
+}
+
+/* Estilo padrão para rótulos dos atributos */
+.attribute[data-attribute="strength"] label::after {
+    content: "Força";
+}
+
+.attribute[data-attribute="constitution"] label::after {
+    content: "Constituição";
+}
+
+.attribute[data-attribute="dexterity"] label::after {
+    content: "Destreza";
+}
+
+.attribute[data-attribute="intelligence"] label::after {
+    content: "Inteligência";
+}
+
+.attribute[data-attribute="wisdom"] label::after {
+    content: "Sabedoria";
+}
+
+.attribute[data-attribute="charisma"] label::after {
+    content: "Carisma";
+}
+
+/* Media Query para telas menores que 768px */
+@media (max-width: 768px) {
+    .attribute label::after {
+        display: inline;
+        content: attr(data-abbreviation); /* Usa o atributo data-abbreviation para o conteúdo reduzido */
+        font-size: 14px; /* Ajusta o tamanho da fonte, se necessário */
     }
 
-    .actions button:hover {
-      background-color: #666;
-    }
-    #versao2 {
-        color: aqua;
-        text-decoration: none; /* Remover sublinhado padrão */
+    .attribute[data-attribute="strength"] label::after {
+        content: "FOR";
     }
 
-    /* Estilos para links visitados */
-    #versao2:visited {
-        color: purple;
+    .attribute[data-attribute="constitution"] label::after {
+        content: "CON";
     }
+
+    .attribute[data-attribute="dexterity"] label::after {
+        content: "DES";
+    }
+
+    .attribute[data-attribute="intelligence"] label::after {
+        content: "INT";
+    }
+
+    .attribute[data-attribute="wisdom"] label::after {
+        content: "SAB";
+    }
+
+    .attribute[data-attribute="charisma"] label::after {
+        content: "CAR";
+    }
+
+    .attribute label {
+        font-size: 14px; /* Ajusta o tamanho da fonte para telas menores */
+    }
+}
   </style>
 </head>
 <body>
@@ -197,16 +313,16 @@
     
     <form id="characterForm">
       <div class="form-section">
-        <label for="name">Nome:</label>
-        <input type="text" id="name" name="name" required>
+        <label for="name" title="Um nome aleatório será gerado se vazio">Nome:</label>
+        <input type="text" id="name" name="name" required title="Um nome aleatório será gerado se vazio">
 
-        <label for="race">Raça:</label>
+        <label for="race" title="Raça padrão: Humano">Raça:</label>
         <select id="race" name="race">
-          <option value="elfo">Elfo</option>
           <option value="humano">Humano</option>
+          <option value="elfo">Elfo</option>
         </select>
         
-        <label for="class">Classe:</label>
+        <label for="class" title="Classe padrão: Bárbaro">Classe:</label>
         <select id="class" name="class">
           <option value="barbaro" title="For +1">Bárbaro</option>
           <option value="bardo" title="Car +1">Bardo</option>
@@ -224,35 +340,35 @@
       </div>
 
       <div class="form-section form-section-attrib attributes">
-        <div class="attribute">
-          <label for="strength" title="A Força proporciona Bloqueio de dano e Armadura">Força:</label>
-          <input type="number" id="strength" name="strength" min="1" max="20" readonly required title="A Força proporciona Bloqueio de dano e Armadura">
-        </div>
-        
-        <div class="attribute">
-          <label for="constitution" title="A Constituição é a base para o HP e regeneração passiva">Constituição:</label>
-          <input type="number" id="constitution" name="constitution" min="1" max="20" readonly required title="A Constituição é a base para o HP e regeneração passiva">
-        </div>
-        
-        <div class="attribute">
-          <label for="dexterity" title="A Destreza proporciona Esquiva, Furtividade, e Roubo">Destreza:</label>
-          <input type="number" id="dexterity" name="dexterity" min="1" max="20" readonly required title="A Destreza proporciona Esquiva, Furtividade, e Roubo">
-        </div>
-        
-        <div class="attribute">
-          <label for="intelligence" title="A Inteligência amplifica o XP, e fornece XP passivo">Inteligência:</label>
-          <input type="number" id="intelligence" name="intelligence" min="1" max="20" readonly required title="A Inteligência amplifica o XP, e fornece XP passivo">
-        </div>
-        
-        <div class="attribute">
-          <label for="wisdom" title="A Sabedoria acelera a regeneração de vida e amplica a cura da Poção">Sabedoria:</label>
-          <input type="number" id="wisdom" name="wisdom" min="1" max="20" readonly required title="A Sabedoria acelera a regeneração de vida e amplica a cura da Poção">
-        </div>
-        
-        <div class="attribute">
-          <label for="charisma" title="O Carisma diminui o custo da Poção e amplifica o drop de ouro">Carisma:</label>
-          <input type="number" id="charisma" name="charisma" min="1" max="20" readonly required title="O Carisma diminui o custo da Poção e amplifica o drop de ouro">
-        </div>
+        <div class="attribute" data-attribute="strength" title="Armadura e Redução de dano">
+          <label for="strength"></label>
+          <input type="number" id="strength" name="strength" min="1" max="20" readonly required>
+      </div>
+      
+      <div class="attribute" data-attribute="constitution" title="HP inicial, por level, e regeneração">
+          <label for="constitution"></label>
+          <input type="number" id="constitution" name="constitution" min="1" max="20" readonly required>
+      </div>
+      
+      <div class="attribute" data-attribute="dexterity" title="Esquiva, Ataque furtivo e Roubo">
+          <label for="dexterity"></label>
+          <input type="number" id="dexterity" name="dexterity" min="1" max="20" readonly required>
+      </div>
+      
+      <div class="attribute" data-attribute="intelligence" title="O Personagem está aprendendo, xp passivo">
+          <label for="intelligence"></label>
+          <input type="number" id="intelligence" name="intelligence" min="1" max="20" readonly required>
+      </div>
+      
+      <div class="attribute" data-attribute="wisdom" title="Amplifique sua cura">
+          <label for="wisdom"></label>
+          <input type="number" id="wisdom" name="wisdom" min="1" max="20" readonly required>
+      </div>
+      
+      <div class="attribute" data-attribute="charisma" title="Ganancioso, mais ouro e mais muquirana">
+          <label for="charisma"></label>
+          <input type="number" id="charisma" name="charisma" min="1" max="20" readonly required>
+      </div>
       </div>
     </form>
 
@@ -269,8 +385,8 @@
         </div>
       </div>
       <div class="stats">
-        <h3>HP</h3>
-        <div class="bar hp barhp">
+        <h3 title="O descanso regenera o HP">HP</h3>
+        <div class="bar hp barhp" title="">
           <div class="progress" id="hpBar" style="width: 100%;"></div>
           <div class="text" id="hpText">100 / 100</div>
         </div>
@@ -282,16 +398,17 @@
       </div>
     </div>
     <div class="actions">
-        <button type="button" id="startButton" onclick="startOrRestartGame()">Começar Jogo</button>
-        <button type="button" onclick="farmMonsters()">Farmar</button>
-        <button type="button" onclick="usePotion()">Usar Poção (Custo: 70 Ouro)</button>
+        <button type="button" id="startButton" onclick="startOrRestartGame()" title="Comece Aqui!">Começar Jogo</button>
+        <button type="button" onclick="farmMonsters()" title="Entrar em Masmorras">Farmar</button>
+        <button type="button" onclick="usePotion()" title="A melhor refeição de Avallon">Comida - 70 Ouro</button>
+        <button type="button" onclick="useTaberna()" title="Consiga ajuda">Evento - 500 Ouro</button>
       </div>
     <div class="log-container">
       <h3>Encontros</h3>
       <div class="encounter-log" id="encounterLog"></div>
     </div>
 
-    <div style="text-align: center; padding-top: 10px;"><a id="versao2" href="../rpg/rpg.html" target="_blank" color="aqua">The Legend of Avallon em breve</a></div>
+    <div style="text-align: center; padding-top: 10px;"><a id="versao2" href="../_rpg/rpg.html" target="_blank" color="white">The Legend of Avallon em breve</a></div>
  <div>
   <p>Proximas atualizações</p>
   <hr>
@@ -430,6 +547,7 @@
     xpNeeded: 100,
     monstersPerLevel: [],
     potionCost: 70,
+    tabernaCost: 500,
     diceRolled: false
   };
 
@@ -440,14 +558,18 @@
 ];
 // Variável para controlar o estado do jogo
 let gameStarted = false;
+let startregenerationTimer = null; // Armazena o timer de regeneração
+let startxpGainTimer = null; // Armazena o timer de ganho de XP
 
 // Função para iniciar ou reiniciar o jogo
 function startOrRestartGame() {
+  
     if (gameStarted) {
         // Reiniciar o jogo
-        startGame(); // Chama a função startGame para reiniciar os dados do jogo
-        // Altera o texto do botão para "Reiniciar Jogo"
+        clearTimers(); 
+        startGame();
         document.getElementById('startButton').textContent = 'Reiniciar Jogo';
+        
     } else {
         // Iniciar o jogo pela primeira vez
         startGame(); // Chama a função startGame para iniciar o jogo
@@ -458,6 +580,7 @@ function startOrRestartGame() {
 }
   ///função para iniciar o jogo
   function startGame() {
+
     const formData = new FormData(document.getElementById('characterForm'));
     let nomeInput = formData.get('name').trim(); // Obter o nome do formulário e remover espaços em branco
 
@@ -488,20 +611,21 @@ function startOrRestartGame() {
     player.xp = 0;
     player.level = 1;
     player.xpNeeded = 100;
-    player.potionCost = calculatePotionCost(); // Calcula o custo da poção baseado na Carisma
+    player.potionCost = calculatePotionCost(); // Calcula o custo da Comida baseado na Carisma
+    player.tabernaCost = 500;
 
     logMessage(`Jogo iniciado! Boa sorte, ${player.name}!`);
     logMessage('4 dados de 6 lados rolados por atributo');
     logMessage('Soma dos 3 maiores dados efetuada');
     updateAttributes();
     updateGameInfo();
-    updatePotionButton(); // Atualiza o texto do botão de poção
-    
+    updatePotionButton(); // Atualiza o texto do botão de Comida
+
     // Iniciar o temporizador para regenerar HP com base na sabedoria
     startRegenerationTimer();
-
-      // Iniciar o temporizador para ganhar XP passivamente com base na inteligência
-      startXpGainTimer();
+    startdebufftimer();
+    // Iniciar o temporizador para ganhar XP passivamente com base na inteligência
+    startXpGainTimer();
   }
 
 ///////////////////////////Constituição HP total, Hp por Level, Quantidade de regen de HP.
@@ -519,13 +643,26 @@ function startOrRestartGame() {
 
 ///////////////////////////Carisma
 function calculatePotionCost() {
-    return Math.max(10, 70 - player.charisma); // Custo mínimo de 10
+    return Math.max(20, 70 - player.charisma); // Custo mínimo de 20
 }
 
 ///////////////////////////Sabedoria tempo para regenerar.
+function clearTimers() {
+    if (startRegenerationTimer !== null) {
+        console.log('Limpando o timer de regeneração');
+        clearInterval(startRegenerationTimer);
+        startRegenerationTimer = null;
+    }
 
+    if (startXpGainTimer !== null) {
+        console.log('Limpando o timer de XP');
+        clearInterval(startXpGainTimer);
+        startXpGainTimer = null;
+    }
+}
 // Função para iniciar o temporizador de regeneração de HP
 function startRegenerationTimer() {
+  
     // Calcula o intervalo de regeneração baseado na sabedoria do jogador
     const regenerationInterval = 200000 / player.wisdom; // Intervalo em milissegundos
     setInterval(regenerateHPByWisdom, regenerationInterval);
@@ -544,17 +681,51 @@ function regenerateHPByWisdom() {
     }
 }
 
-///////////////////////////Inteligencia passiva
-
 // Função para iniciar o temporizador de aumento de XP passivo com base na inteligência
 function startXpGainTimer() {
+
     // Calcula o intervalo de aumento de XP passivo baseado na inteligência do jogador
     const xpGainInterval = 50000 / player.intelligence; // Intervalo em milissegundos
-    setInterval(gainXpByIntelligence, xpGainInterval);
+    setInterval(() => {
+        if (player.currentHp > 0) { // Verifica se o jogador está vivo
+            gainXpByIntelligence();
+        }
+    }, xpGainInterval);
+
+}
+function startdebufftimer() {
+    // Define a frequência do intervalo para 1 segundo (1000 ms)
+    const interval = 1000;
+    let hasLoggedDeath = false; // Variável de controle para rastrear se a mensagem de morte já foi enviada
+
+    setInterval(() => {
+        // Recalcula o dano de debuff a cada segundo, arredondado para baixo
+        const debuffDamage = Math.floor(player.level/3);
+
+        if (player.currentHp <= 0) {
+            player.currentHp = 0; // Certifica-se de que o HP não fique negativo
+            updateGameInfo(); // Atualiza as informações do jogo antes de exibir a mensagem
+            if (!hasLoggedDeath) {
+                playDeadSound();
+                logMessage(`${player.name} morreu de fome!`);
+                hasLoggedDeath = true; // Define a variável de controle para impedir logs repetidos
+            }
+            // Aqui você pode adicionar lógica adicional, como reiniciar o jogo ou outra ação
+        } else {
+            player.currentHp -= debuffDamage; // Aplica o dano de debuff
+            if (player.currentHp < 0) {
+                player.currentHp = 0; // Certifica-se de que o HP não fique negativo
+            }
+            updateGameInfo(); // Atualiza as informações do jogo
+            
+        }
+    }, interval);
 }
 
-    // Função para aumentar XP passivamente com base na inteligência
-    function gainXpByIntelligence() {
+// Função para aumentar XP passivamente com base na inteligência
+function gainXpByIntelligence() {
+    if (player.currentHp <= 0) return; // Se o jogador está morto, não ganha XP
+
     // Calcula um valor aleatório de um dado de 6 faces
     const xpDice = Math.ceil(Math.random() * 6);
 
@@ -564,20 +735,10 @@ function startXpGainTimer() {
     // Adiciona o XP ganho ao jogador
     player.xp += xpGained;
     if (player.xp >= player.xpNeeded) {
-            levelUp();
-        }
+        levelUp();
+    }
     updateGameInfo(); // Atualiza as informações do jogo após o aumento de XP
-    
 }
-
-///////////////////////////Força, Bloqueio de dano em FarmMonters
-
-///////////////////////////Destreza Esquiva em FarmMonsters
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////
 
 //randomizar dados
   function getRandomAbilityScore() {
@@ -635,9 +796,6 @@ function rollAttribute() {
     diceValues.sort((a, b) => b - a);
     return diceValues[0] + diceValues[1] + diceValues[2];
 }
-
-
-
   // Função para atualizar os atributos na tela
   function updateAttributes() {
     document.getElementById('strength').value = player.strength;
@@ -646,8 +804,7 @@ function rollAttribute() {
     document.getElementById('intelligence').value = player.intelligence;
     document.getElementById('wisdom').value = player.wisdom;
     document.getElementById('charisma').value = player.charisma;
-  }
-  
+  } 
 
 // Função para atualizar as informações do jogo na tela
 function updateGameInfo() {
@@ -659,23 +816,37 @@ function updateGameInfo() {
     document.getElementById('levelText').textContent = `${player.level}`;
 }
 
-
 // Define os monstros disponíveis por nível
 player.monstersPerLevel = {
-    1: [{ name: 'Goblin', damage: 2 }, { name: 'Rato', damage: 1 }],
-    2: [{ name: 'Orc', damage: 4 }, { name: 'Lobo', damage: 3 }],
-    3: [{ name: 'Dragão Bebê', damage: 8 }, { name: 'Troll', damage: 6 }],
-    4: [{ name: 'Esqueleto', damage: 3 }, { name: 'Zumbi', damage: 5 }],
-    5: [{ name: 'Elemental de Fogo', damage: 10 }, { name: 'Bárbaro', damage: 7 }],
-    6: [{ name: 'Grifo', damage: 12 }, { name: 'Basilisco', damage: 9 }],
-    7: [{ name: 'Cerberus', damage: 15 }, { name: 'Hidra', damage: 11 }],
-    8: [{ name: 'Manticore', damage: 18 }, { name: 'Espectro', damage: 13 }],
-    9: [{ name: 'Dragão Adulto', damage: 20 }, { name: 'Lich', damage: 16 }],
-    10: [{ name: 'Kraken', damage: 25 }, { name: 'Behemoth', damage: 22 }]
-    // Adicione mais níveis e monstros conforme necessário
+    1: [{ name: 'Sapo Briguento', damage:3 }, { name: 'Rato Selvagem', damage: 2}],
+    2: [{ name: 'Bode Violento', damage: 5 }, { name: 'Macaco Ligeiro', damage: 3 }],
+    3: [{ name: 'Rinoceronte Covarde', damage: 7}, { name: 'Gato do Mato', damage: 6 }],
+    4: [{ name: 'Lobo Veloz', damage: 9 }, { name: 'Urso faminto', damage: 9 },
+    { name: 'Dragão Papagaio', damage: 11 }, { name: 'Goblin Astuto', damage: 9 }],
+    5: [{ name: 'Esqueleto sem dente', damage: 13 }, { name: 'Zumbi fedorento', damage: 12 }],
+    6: [{ name: 'Troll Açogueiro', damage: 15 }, { name: 'Orc Voodoo', damage: 15 }],
+    7: [{ name: 'Elemental de Fogo', damage: 17 }, { name: 'Elemental da Luz', damage: 17 },
+     { name: 'Elemental das Trevas', damage: 17 }, { name: 'Elemental da Terra', damage: 17 }, 
+     { name: 'Elemental da Água', damage: 17 }],
+    8: [{ name: 'Tigre Feroz', damage: 21 }, { name: 'Panda Bêbado', damage: 19 }],
+    9: [{ name: 'Camaleão Invisível', damage: 23 }, { name: 'Corvo Sombrio', damage: 22 }],
+    10: [{ name: 'Grifo', damage: 25 }, { name: 'Bruxa Macabra', damage: 26 }],
+    11: [{ name: 'Serpente do Lago', damage: 28 }, { name: 'Orc Raivoso', damage: 29 }],
+    12: [{ name: 'Cerberus', damage: 30 }, { name: 'Ciclope', damage: 31 }],
+    13: [{ name: 'Hidra', damage: 33 }, { name: 'Espectro', damage: 30 }],
+    14: [{ name: 'Dragão Adulto', damage: 42 }, { name: 'Lich', damage: 35 }],
+    15: [{ name: 'Bárdo e Paladino', damage: 50 }, { name: 'Bárbaro e Feiticeiro', damage: 50 },
+         { name: 'Ladino e Mago', damage: 50 }, { name: 'Patrulheiro e Bruxo', damage: 50 }, 
+         { name: 'Druida e Monge', damage: 50 }, { name: 'Guerreiro e Clérigo', damage: 50 }], 
+    17: [{ name: 'Centauro', damage: 70 }, { name: 'Golem', damage: 60 }],
+    18: [{ name: 'Harpia', damage: 80 }, { name: 'Gigante', damage: 75 }],
+    19: [{ name: 'Nefilim', damage: 90 }, { name: 'Minotauro', damage: 85 }],
+    20: [{ name: 'Kraken', damage: 100 }, { name: 'Dragão Milenar', damage: 100 }],
+    21: [{ name: 'Mestre dos Elementos', damage: 120 }, { name: 'Necromante', damage: 130 }],
+    22: [{ name: 'Espirito Arcano', damage: 150 }, { name: 'Paladino Negro', damage: 180 }],
+    23: [{ name: 'Fada Etérea', damage: 200 }, { name: 'Mantícora', damage: 250 }],
+    24: [{ name: 'Deus', damage: 500 }, { name: 'Avallon', damage: 300 }]    
 };
-
-
 
 //encontros menssagem
   function logMessage(message) {
@@ -687,7 +858,6 @@ player.monstersPerLevel = {
   // Rola o log para a parte inferior após adicionar a mensagem
   encounterLog.scrollTop = encounterLog.scrollHeight;
 }
-
 
 function farmMonsters() {
 
@@ -715,7 +885,6 @@ function farmMonsters() {
     const monster = availableMonsters[randomMonsterIndex];
     const monstersDefeated = Math.floor(Math.random() * 3) + 1; // De 1 a 3 monstros
     
-
     const monsterDamage = monster.damage;
     const randomMonsterDamage = Math.floor(Math.random() * monsterDamage) + 1; // Dano aleatório entre 1 e monsterDamage
 
@@ -725,21 +894,21 @@ function farmMonsters() {
     const totalGoldEarned = baseGoldEarned + randomGoldBonus + player.charisma;
 
     const monsterXp = monster.damage;
-    const xpEarned = monstersDefeated * 20 * monsterXp; // 20 XP por monstro derrotado
+    const xpEarned = (5+player.level) * monsterXp; // 20 XP por monstro derrotado
 
     // Calcula a chance de esquiva baseada na destreza do jogador
     const dodgeChance = player.dexterity;
     const didDodge = Math.random() * 100 < dodgeChance;
 
     // Calcula o dano base
-    let damageTaken = Math.floor((Math.random() * 4) + 1) * monsterDamage * monstersDefeated;
+    let damageTaken = Math.floor((Math.random() * 4) + 1) * monsterDamage + monstersDefeated*5;
 
     // Reduz o dano com base na força do jogador
-    const strengthReduction = Math.ceil(player.strength / 3);
+    const strengthReduction = Math.ceil(player.strength/5);
     damageTaken -= strengthReduction;
 
     // Calcula o bloqueio de dano baseado na força do jogador e no nível
-    const armorReduction = Math.floor((player.strength / 100) * damageTaken);
+    const armorReduction = Math.floor((player.strength / 200) * damageTaken);
     damageTaken -= armorReduction;
 
     // Certifica-se de que o dano nunca seja negativo
@@ -752,7 +921,7 @@ function farmMonsters() {
         player.currentHp = 0; // Certifica-se de que o HP não fique negativo
         updateGameInfo(); // Atualiza as informações do jogo antes de exibir a mensagem
         playDeadSound();
-        logMessage(`${player.name} recebeu ${damageTaken} de dano de ${monstersDefeated} ${monster.name}(s) e morreu!`);
+        logMessage(`${player.name} recebeu ${damageTaken} de dano de ${monster.name} e morreu!`);
         // Aqui você pode adicionar lógica adicional, como reiniciar o jogo ou outra ação
     } else {
         // Adiciona um valor aleatório de um dado de 6 faces (d6) à inteligência do jogador
@@ -768,16 +937,16 @@ function farmMonsters() {
             const messageType = Math.floor(Math.random() * 3) + 1;
             if (messageType === 1) {
                 player.xp += totalXpEarned;
-                logMessage(`${player.name} esquivou do ataque de ${monstersDefeated} ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro.`);
+                logMessage(`${player.name} esquivou do ataque de ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro.`);
             } else if (messageType === 2) {
                 player.xp += totalXpEarned;
-                logMessage(`${player.name} atacou furtivamente ${monstersDefeated} ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro.`);
+                logMessage(`${player.name} atacou furtivamente ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro.`);
             } else {
                 logMessage(`${player.name} roubou furtivamente ${totalGoldEarned} de ouro sem ser notado.`);
             }
         } else {
             player.xp += totalXpEarned;
-            logMessage(`${player.name} derrotou ${monstersDefeated} ${monster.name}(s) e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro. Dano recebido: ${damageTaken}.`);
+            logMessage(`${player.name} derrotou ${monster.name} e ganhou ${totalXpEarned} XP e ${totalGoldEarned} ouro. Dano recebido: ${damageTaken}.`);
         }
     
         if (player.xp >= player.xpNeeded) {
@@ -787,53 +956,194 @@ function farmMonsters() {
         playFarmSound();
     }
 }
-
-
 //função usar potion
 function usePotion() {
-    // Verifica se o jogador está vivo antes de permitir usar a poção
+    // Verifica se o jogador está vivo antes de permitir usar a Comida
     if (player.currentHp <= 0) {
         logMessage(`Comece o jogo!`);
         return; // Sai da função sem fazer mais nada
     }
 
-    const potionHealAmount = 20+player.wisdom; // Define a quantidade de HP que a poção irá curar
+    const potionHealAmount = 5*player.wisdom; // Define a quantidade de HP que a Comida irá curar
 
     if (player.gold >= player.potionCost) {
-        // Verifica se o jogador tem ouro suficiente para comprar a poção
+        // Verifica se o jogador tem ouro suficiente para comprar a Comida
         if (player.currentHp + potionHealAmount <= player.maxHp) {
-            // Se a cura da poção não exceder o máximo de HP, adiciona a quantidade de cura
+            // Se a cura da Comida não exceder o máximo de HP, adiciona a quantidade de cura
             player.currentHp += potionHealAmount;
         } else {
-            // Se a cura da poção exceder o máximo de HP, apenas define para o máximo
+            // Se a cura da Comida exceder o máximo de HP, apenas define para o máximo
             player.currentHp = player.maxHp;
         }
 
-        // Subtrai o custo da poção do ouro do jogador
+        // Subtrai o custo da Comida do ouro do jogador
         player.gold -= player.potionCost;
 
         // Atualiza as informações do jogo na tela
         updateGameInfo();
         playPotionSound();
         // Exibe mensagem de log para o jogador
-        logMessage(`${player.name} usou uma poção de cura e restaurou ${potionHealAmount} HP.`);
+        logMessage(`${player.name} comeu e restaurou ${potionHealAmount} HP.`);
     } else {
         // Se o jogador não tiver ouro suficiente, exibe mensagem de log informando
-        logMessage(`${player.name} não tem ouro suficiente para comprar uma poção de cura.`);
+        logMessage(`${player.name} não tem ouro suficiente para comprar uma comida.`);
     }
 }
 function updatePotionButton() {
-    document.querySelector('button[onclick="usePotion()"]').textContent = `Usar Poção (Custo: ${player.potionCost} ouro)`;
+    document.querySelector('button[onclick="usePotion()"]').textContent = `Comida - ${player.potionCost} Ouro`;
+}
+// Mensagens personalizadas para cada atributo
+const strengthMessages = [
+    "Você me bateu? Uma briga de rua aumentou sua Força.",
+    "Resgatar um gato dos destroços de uma casa aumetou sua Força.",
+    "Um guerreiro lhe desafiou você está mais Forte.",
+    "Após fazer musculação, sua Força aumentou.",
+    "Uma luta de punhos aumentou sua Força.",
+    "Carregar as compras da vovó aumentou sua Força.",
+    "O Ferreiro ajustou seu equipamento, sua Força aumentou",
+    "Você quebrou uma pedra com as próprias mãos, sua Força aumentou.",
+    "Treinar artes marciais aumentou sua Força.",
+    "Trabalhar edifica o homem, sua Força aumentou."
+];
+
+const constitutionMessages = [
+    "Treinar no Dojo aumentou sua Constituição.",
+    "Uma dieta saudável aumentou sua Constituição.",
+    "Você sobreviveu a o treino de seu mestre, sua Constituição aumentou.",
+    "Escalar montanhas aumentou sua Constituição.",
+    "Enfrentar uma tempestade fortaleceu sua Constituição.",
+    "Uma jornada por terrenos difíceis aumentou sua Constituição.",
+    "Nadar em águas geladas aumentou sua Constituição.",
+    "Você passou uma noite em vigília, sua Constituição aumentou.",
+    "Treinar em alta altitude aumentou sua Constituição.",
+    "Você se recuperou de uma doença, sua Constituição aumentou."
+];
+
+const dexterityMessages = [
+    "Uma fuga desenfreada aumentou sua Destreza.",
+    "Praticar acrobacias aumentou sua Destreza.",
+    "Você treinou com um mestre ladino, sua Destreza aumentou.",
+    "Desviar de obstáculos aumentou sua Destreza.",
+    "Você dançou elegantemente, sua Destreza aumentou.",
+    "Praticar tiro ao alvo aumentou sua Destreza.",
+    "Uma corrida pelos telhados aumentou sua Destreza.",
+    "Participar de uma competição de agilidade aumentou sua Destreza.",
+    "O ferreiro lhe vendeu um equipamento, sua Destreza aumentou.",
+    "Treinar movimentos rápidos com a espada aumentou sua Destreza"
+];
+
+const intelligenceMessages = [
+    "Você descobriu algo espionando sua Inteligência aumentou.",
+    "Ler um livro antigo aumentou sua Inteligência.",
+    "Um mago lhe ensinou um novo truque, sua Inteligência aumentou.",
+    "Resolver um enigma complexo aumentou sua Inteligência.",
+    "Estudar pergaminhos antigos aumentou sua Inteligência.",
+    "Você participou de um debate acadêmico, sua Inteligência aumentou.",
+    "Passar horas na biblioteca aumentou sua Inteligência.",
+    "Desenvolver uma fórmula mágica aumentou sua Inteligência.",
+    "Aprender um novo idioma aumentou sua Inteligência.",
+    "Explorar ruínas antigas aumentou sua Inteligência."
+];
+
+const wisdomMessages = [
+    "Você pensou antes de agir, sua Sabedoria aumentou.",
+    "Refletir sobre uma decisão importante aumentou sua Sabedoria.",
+    "Meditar em um templo antigo aumentou sua Sabedoria.",
+    "Ouvir conselhos de um ancião aumentou sua Sabedoria.",
+    "Você passou um tempo em contemplação profunda, sua Sabedoria aumentou.",
+    "O Ferreiro afiou suas lâminas, sua Sabedoria aumentou",
+    "Estudar filosofia antiga aumentou sua Sabedoria.",
+    "Consultar oráculos antigos aumentou sua Sabedoria.",
+    "Praticar técnicas de meditação aumentou sua Sabedoria.",
+    "Você aprendeu com as experiências de vida, sua Sabedoria aumentou."
+];
+
+const charismaMessages = [
+    "Ganhar uma discussão aumentou seu Carisma.",
+    "Conversar com as pessoas aumentou seu Carisma.",
+    "Você encantou uma multidão, seu Carisma aumentou.",
+    "Ajudar um necessitado aumentou seu Carisma.",
+    "Cantar na rua aumentou seu Carisma.",
+    "Usar uma joia roubada aumentou seu Carisma.",
+    "Fazer amizades na taberna aumentou seu Carisma.",
+    "Você ensinou seu aprendiz seu Carisma aumentou.",
+    "Tocar Violão ao ar livre aumentou seu Carisma.",
+    "Você está elegante seu Carisma aumentou."
+];
+// Função para obter uma mensagem aleatória
+function getRandomMessage(messagesArray) {
+    const randomIndex = Math.floor(Math.random() * messagesArray.length);
+    return messagesArray[randomIndex];
+}
+// Função usar Taberna
+function useTaberna() {
+    // Verifica se o jogador está vivo antes de permitir usar a taberna
+    if (player.currentHp <= 0) {
+        logMessage(`Comece o jogo!`);
+        return; // Sai da função sem fazer mais nada
+    }
+
+    if (player.gold >= player.tabernaCost) {
+        // Lista de atributos
+        let attributes = ['strength', 'constitution', 'dexterity', 'intelligence', 'wisdom', 'charisma'];
+
+        // Seleciona um atributo aleatório
+        let randomAttribute = attributes[Math.floor(Math.random() * attributes.length)];
+        
+        // Aumenta o atributo selecionado em 2
+        player[randomAttribute] += 2;
+
+        // Subtrai o custo da taberna do ouro do jogador
+        player.gold -= player.tabernaCost;
+
+        // Atualiza as informações do jogo na tela
+        updateGameInfo();
+        updateAttributes();
+
+        // Exibe mensagem de log para o jogador com a mensagem personalizada
+        let attributeMessages;
+        switch (randomAttribute) {
+            case 'strength':
+                attributeMessages = strengthMessages;
+                break;
+            case 'constitution':
+                attributeMessages = constitutionMessages;
+                break;
+            case 'dexterity':
+                attributeMessages = dexterityMessages;
+                break;
+            case 'intelligence':
+                attributeMessages = intelligenceMessages;
+                break;
+            case 'wisdom':
+                attributeMessages = wisdomMessages;
+                break;
+            case 'charisma':
+                attributeMessages = charismaMessages;
+                break;
+        }
+        logMessage(getRandomMessage(attributeMessages));
+        playTabernaSound();
+
+    } else {
+        // Se o jogador não tiver ouro suficiente, exibe mensagem de log informando
+        logMessage(`${player.name} não tem ouro suficiente para usar a taberna.`);
+    }
+}
+
+// Função para atualizar o botão da Taberna Modificado para Evento
+function updateTabernaButton() {
+    document.querySelector('button[onclick="useTaberna()"]').textContent = `Evento - ${player.tabernaCost} Ouro`;
 }
 
 //função upar
 function levelUp() {
     player.level++;
     player.xp -= player.xpNeeded;
-    player.xpNeeded = Math.floor((player.xpNeeded + 82) * 1.35);
-    player.maxHp += Math.floor(((player.constitution - 10) / 2) + (Math.random() * 6) + 1);
+    player.xpNeeded = Math.floor((player.xpNeeded + 82) * 1.22);
+    player.maxHp += Math.floor((player.constitution / 2) + (Math.random() * 12) + 5);
     player.currentHp = player.maxHp;
-
+    
 // Aumenta os atributos com base na classe do jogador
 switch (player.class) {
 
@@ -898,23 +1208,24 @@ switch (player.class) {
 
     // Aumenta os atributos com base no nível
     let attributes = ['strength', 'constitution', 'dexterity', 'intelligence', 'wisdom', 'charisma'];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 2; i++) {
     let randomAttribute = attributes[Math.floor(Math.random() * attributes.length)];
     player[randomAttribute] += 1;
 }
-
-
-    // Recalcula o custo da poção
+    // Recalcula o custo da Comida
     player.potionCost = calculatePotionCost();
-    updatePotionButton(); // Atualiza o texto do botão de poção
-
+    updatePotionButton(); // Atualiza o texto do botão de Comida
+    updateTabernaButton();
     updateAttributes(); // Atualiza os campos do formulário com os novos valores de player
 
     updateGameInfo();
     playLevelUpSound();
     logMessage(`${player.name} subiu para o nível ${player.level}.`);
+        // Verifica se o jogador atingiu o nível 3 e registra a mensagem
+        if (player.level === 3) {
+        logMessage(`${player.name} O Debuff de fome aplicado, sofrendo dano por segundo!`);
+    }
 }
-
 
   // Funções para reproduzir som
   function playLevelUpSound() {
