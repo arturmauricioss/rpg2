@@ -634,7 +634,7 @@ function startOrRestartGame() {
     startDebuffTimer();
     // Iniciar o temporizador para ganhar XP passivamente com base na inteligência
     startXpGainTimer();
-    
+    logMessage('Buff ativado Viver é Aprender - concede XP passivo');
   }
 
 ///////////////////////////Constituição HP total, Hp por Level, Quantidade de regen de HP.
@@ -699,7 +699,7 @@ function regenerateHPByWisdom() {
 function startXpGainTimer() {
 
     // Calcula o intervalo de aumento de XP passivo baseado na inteligência do jogador
-    const xpGainInterval = 50000 / player.intelligence; // Intervalo em milissegundos
+    const xpGainInterval = 100000 / player.intelligence; // Intervalo em milissegundos
     setInterval(() => {
         if (player.currentHp > 0) { // Verifica se o jogador está vivo
             gainXpByIntelligence();
