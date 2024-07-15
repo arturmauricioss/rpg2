@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RPG em Javascript</title>
+  <meta name="keywords" content="Artur, Mauricio, Curriculo, Projetos, Portfólio, Programação, Desenvolvimento, Dev, Web, Design, RPG, D&D">
+  <meta name="description" content="Simples RPG baseado em D&D">
+  <meta name="author" content="Artur Maurício">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Artur Maurício">
+  <meta property="og:description" content="Currículo e Portfólio">
+  <meta property="og:image" content="https://arturmauricioss.github.io/media/img/logocolorido.png">
+  <meta property="og:url" content="https://arturmauricioss.github.io/">
+  <link rel="icon" type="image/png" href="media/img/logocolorido.png">
+  <title>Avallon RPG</title>
   <style>
       *, html, body{
           margin: 0;
@@ -408,8 +417,8 @@
       <div class="encounter-log" id="encounterLog"></div>
     </div>
 
-    <div style="text-align: center; padding-top: 10px;"><a id="versao2" href="../_rpg/rpg.html" target="_blank" color="white">The Legend of Avallon em breve</a></div>
- <div>
+    <div style="text-align: center; padding-top: 10px;"><a id="versao2" href="../rpg/rpg.html" target="_blank" color="white">The Legend of Avallon em breve</a></div>
+ <!-- <div>
   <p>Proximas atualizações</p>
   <hr>
   <p>recalcular e equilibriar os atributos e seus ganhos em suas formulas
@@ -512,7 +521,7 @@
     <br>
     controle com api do chatgpt de narração de historia
   </p>
- </div>
+ </div> -->
   </div>
 
   <audio id="levelUpSound">
@@ -548,7 +557,7 @@
     monstersPerLevel: [],
     potionCost: 70,
     tabernaCost: 500,
-    diceRolled: false
+    diceRolled: false,
   };
 
   ////////nomes aleatorios caso o player não escolha um nome.
@@ -583,7 +592,6 @@ function startOrRestartGame() {
 
     const formData = new FormData(document.getElementById('characterForm'));
     let nomeInput = formData.get('name').trim(); // Obter o nome do formulário e remover espaços em branco
-
     // Verificar se o nome está vazio ou não preenchido
     if (nomeInput === '') {
         // Escolher um nome aleatório da lista
@@ -623,9 +631,10 @@ function startOrRestartGame() {
 
     // Iniciar o temporizador para regenerar HP com base na sabedoria
     startRegenerationTimer();
-    startdebufftimer();
+    startDebuffTimer();
     // Iniciar o temporizador para ganhar XP passivamente com base na inteligência
     startXpGainTimer();
+    
   }
 
 ///////////////////////////Constituição HP total, Hp por Level, Quantidade de regen de HP.
@@ -658,6 +667,11 @@ function clearTimers() {
         console.log('Limpando o timer de XP');
         clearInterval(startXpGainTimer);
         startXpGainTimer = null;
+    }
+    if  (startDebuffTimer !== null){
+        console.log('Limpando o timer do debuff');
+        clearInterval(startDebuffTimer);
+        startDebuffTimer = null;
     }
 }
 // Função para iniciar o temporizador de regeneração de HP
@@ -693,34 +707,37 @@ function startXpGainTimer() {
     }, xpGainInterval);
 
 }
-function startdebufftimer() {
-    // Define a frequência do intervalo para 1 segundo (1000 ms)
-    const interval = 1000;
+function startDebuffTimer() {
+    const interval = 1000; // Frequência do intervalo para 1 segundo (1000 ms)
     let hasLoggedDeath = false; // Variável de controle para rastrear se a mensagem de morte já foi enviada
+    let debuffCausedDeath = false; // Variável para verificar se a morte foi causada pelo debuff
 
     setInterval(() => {
-        // Recalcula o dano de debuff a cada segundo, arredondado para baixo
-        const debuffDamage = Math.floor(player.level/3);
+        const debuffDamage = Math.floor(player.level / 3);
 
         if (player.currentHp <= 0) {
-            player.currentHp = 0; // Certifica-se de que o HP não fique negativo
-            updateGameInfo(); // Atualiza as informações do jogo antes de exibir a mensagem
             if (!hasLoggedDeath) {
-                playDeadSound();
-                logMessage(`${player.name} morreu de fome!`);
-                hasLoggedDeath = true; // Define a variável de controle para impedir logs repetidos
+                if (debuffCausedDeath) {
+                    // playDeadSound();
+                   
+                } else {
+                    
+                }
+                hasLoggedDeath = true;
             }
-            // Aqui você pode adicionar lógica adicional, como reiniciar o jogo ou outra ação
+            player.currentHp = 0;
+            updateGameInfo();
         } else {
-            player.currentHp -= debuffDamage; // Aplica o dano de debuff
+            player.currentHp -= debuffDamage;
             if (player.currentHp < 0) {
-                player.currentHp = 0; // Certifica-se de que o HP não fique negativo
+                player.currentHp = 0;
             }
-            updateGameInfo(); // Atualiza as informações do jogo
-            
+            debuffCausedDeath = true; // Define que o debuff causou a morte
+            updateGameInfo();
         }
     }, interval);
 }
+
 
 // Função para aumentar XP passivamente com base na inteligência
 function gainXpByIntelligence() {
@@ -1223,7 +1240,7 @@ switch (player.class) {
     logMessage(`${player.name} subiu para o nível ${player.level}.`);
         // Verifica se o jogador atingiu o nível 3 e registra a mensagem
         if (player.level === 3) {
-        logMessage(`${player.name} O Debuff de fome aplicado, sofrendo dano por segundo!`);
+        logMessage(`${player.name} O Debuff de fome foi aplicado, sofrendo dano por segundo!`);
     }
 }
 
